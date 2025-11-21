@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -21,7 +20,6 @@ func setupTestDBForPostgres(t *testing.T) *gorm.DB {
 	err = db.AutoMigrate(
 		&models.Contacts{},
 		&models.ProjectGroups{},
-		&models.GamesPlayed{},
 		&models.ProjectRepositories{},
 	)
 	require.NoError(t, err)
@@ -141,70 +139,6 @@ func TestPostgresDB_GetProjects_FiltersByType(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Len(t, gameProjects, 1)
 	assert.Equal(t, "Game Project", gameProjects[0].Title)
-}
-
-func TestPostgresDB_GetGamesPlayed_Success(t *testing.T) {
-	db := setupTestDBForPostgres(t)
-	postgresDB := NewPostgresDB(db)
-
-	// Create test games played records
-	for i := 0; i < 7; i++ {
-		game := &models.GamesPlayed{
-			Title:       fmt.Sprintf("Game %d", i+1),
-			Description: "Test game description",
-			Rating:      5,
-			CreatedAt:   time.Date(2023, time.January, 1, 12, 0, 0, 0, time.UTC).Add(-time.Duration(i) * time.Hour),
-		}
-		db.Create(game)
-	}
-
-	games, err := postgresDB.GetGamesPlayed()
-
-	assert.NoError(t, err)
-	assert.Len(t, games, 5) // Should be limited to 5
-	// Should be ordered by created_at desc, so Game 1 should be first
-	assert.Equal(t, "Game 1", games[0].Title)
-}
-
-func TestPostgresDB_GetGamesPlayed_EmptyResult(t *testing.T) {
-	db := setupTestDBForPostgres(t)
-	postgresDB := NewPostgresDB(db)
-
-	games, err := postgresDB.GetGamesPlayed()
-
-	assert.NoError(t, err)
-	assert.Empty(t, games)
-}
-
-func TestPostgresDB_GetGamesPlayed_OrderedByCreatedAt(t *testing.T) {
-	db := setupTestDBForPostgres(t)
-	postgresDB := NewPostgresDB(db)
-
-	// Create games with different timestamps
-	oldGame := &models.GamesPlayed{
-		Title:       "Old Game",
-		Description: "Old game description",
-		Rating:      4,
-		CreatedAt:   time.Date(2023, time.January, 1, 12, 0, 0, 0, time.UTC).Add(-24 * time.Hour),
-	}
-
-	newGame := &models.GamesPlayed{
-		Title:       "New Game",
-		Description: "New game description",
-		Rating:      5,
-		CreatedAt:   time.Date(2023, time.January, 1, 12, 0, 0, 0, time.UTC),
-	}
-
-	db.Create(oldGame)
-	db.Create(newGame)
-
-	games, err := postgresDB.GetGamesPlayed()
-
-	assert.NoError(t, err)
-	assert.Len(t, games, 2)
-	// New game should be first (ordered by created_at desc)
-	assert.Equal(t, "New Game", games[0].Title)
-	assert.Equal(t, "Old Game", games[1].Title)
 }
 
 // Test for error handling - database errors should return error, not panic

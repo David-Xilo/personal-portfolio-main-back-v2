@@ -42,19 +42,3 @@ func (p *PostgresDB) GetProjects(projectType models.ProjectType) ([]*models.Proj
 
 	return projectGroups, nil
 }
-
-func (p *PostgresDB) GetGamesPlayed() ([]*models.GamesPlayed, error) {
-	var gamesPlayed []*models.GamesPlayed
-
-	if err := p.db.
-		Order("created_at desc").
-		Limit(5). // limit for now, just in case
-		Find(&gamesPlayed).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return []*models.GamesPlayed{}, nil
-		}
-		return nil, err
-	}
-
-	return gamesPlayed, nil
-}

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	security2 "personal-portfolio-main-back/src/internal/security"
 	"testing"
 	"time"
 
@@ -38,14 +37,6 @@ func (m *MockDatabase) GetProjects(projectType models.ProjectType) ([]*models.Pr
 	return args.Get(0).([]*models.ProjectGroups), args.Error(1)
 }
 
-func (m *MockDatabase) GetGamesPlayed() ([]*models.GamesPlayed, error) {
-	args := m.Called()
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).([]*models.GamesPlayed), args.Error(1)
-}
-
 func TestSetupRoutes(t *testing.T) {
 	// Set test mode for gin
 	gin.SetMode(gin.TestMode)
@@ -66,9 +57,8 @@ func TestSetupRoutes(t *testing.T) {
 		FrontendAuthKey:      configuration.FrontendTokenAuth,
 		JWTExpirationMinutes: 30,
 	}
-	jwtManager := security2.NewJWTManager(config)
 
-	routerSetup := SetupRoutes(mockDB, config, jwtManager)
+	routerSetup := SetupRoutes(mockDB, config)
 
 	assert.NotNil(t, routerSetup)
 	assert.NotNil(t, routerSetup.Router)
@@ -157,9 +147,8 @@ func TestGetControllers(t *testing.T) {
 	config.JWTSigningKey = "JWTSigningKey"
 	config.FrontendAuthKey = configuration.FrontendTokenAuth
 	config.JWTExpirationMinutes = 30
-	jwtManager := security2.NewJWTManager(config)
 
-	controllers := getControllers(mockDB, config, jwtManager)
+	controllers := getControllers(mockDB, config)
 
 	assert.Len(t, controllers, 4) // about, tech, games, finance
 

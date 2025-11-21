@@ -14,7 +14,7 @@ func SecurityHeadersMiddleware(config configuration.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		path := c.Request.URL.Path
 		isSwagger := strings.HasPrefix(path, "/swagger/") || path == "/"
-		isAPIEndpoint := strings.HasPrefix(path, "/auth/") || strings.HasPrefix(path, "/about/") ||
+		isAPIEndpoint := strings.HasPrefix(path, "/about/") ||
 			strings.HasPrefix(path, "/tech/") || strings.HasPrefix(path, "/games/") ||
 			strings.HasPrefix(path, "/finance/") || strings.HasPrefix(path, "/health") ||
 			strings.HasPrefix(path, "/internal/")
@@ -22,11 +22,12 @@ func SecurityHeadersMiddleware(config configuration.Config) gin.HandlerFunc {
 
 		if (isProd && !isAPIEndpoint) || (!isProd && !isAPIEndpoint && !isSwagger) {
 			errorMsg := fmt.Sprintf("Path not allowed %s", c.Request.URL.Path)
-			err := fmt.Errorf(errorMsg)
+			slog.Error("SecurityHeadersMiddleware", "error", errorMsg)
+			err := fmt.Errorf("path not allowed")
 
 			slog.Error("SecurityHeadersMiddleware", "error", err)
 
-			c.Error(err)
+			//err = c.Error(err)
 
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": errorMsg})
 

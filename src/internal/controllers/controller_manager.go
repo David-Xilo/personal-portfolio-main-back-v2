@@ -22,7 +22,6 @@ import (
 	swaggerconfig "personal-portfolio-main-back/src/internal/controllers/swagger"
 	"personal-portfolio-main-back/src/internal/database"
 	"personal-portfolio-main-back/src/internal/middleware"
-	"personal-portfolio-main-back/src/internal/security"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -38,19 +37,15 @@ type RouterSetup struct {
 	RateLimiter *middleware.IPRateLimiter
 }
 
-func SetupRoutes(db database.Database, config configuration.Config, jwtManager *security.JWTManager) *RouterSetup {
-	controllers := getControllers(db, config, jwtManager)
+func SetupRoutes(db database.Database, config configuration.Config) *RouterSetup {
+	controllers := getControllers(db, config)
 	routerSetup := createRouter(config)
 
 	router := routerSetup.Router
 
 	addHealthEndpoint(router)
 
-	authController := endpoints.NewAuthController(config, jwtManager)
-	authController.RegisterRoutes(router)
-
 	protected := router.Group("/")
-	protected.Use(middleware.JWTAuthMiddleware(jwtManager))
 
 	registerProtectedRoutes(protected, controllers)
 
@@ -85,17 +80,11 @@ func createRouter(config configuration.Config) *RouterSetup {
 	}
 }
 
-func getControllers(db database.Database, config configuration.Config, jwtManager *security.JWTManager) []Controller {
+func getControllers(db database.Database, config configuration.Config) []Controller {
 	var controllers []Controller
-
-	aboutController := endpoints.NewAboutController(db, config)
-	controllers = append(controllers, aboutController)
 
 	techController := endpoints.NewTechController(db, config)
 	controllers = append(controllers, techController)
-
-	gamesController := endpoints.NewGamesController(db, config)
-	controllers = append(controllers, gamesController)
 
 	financeController := endpoints.NewFinanceController(db, config)
 	controllers = append(controllers, financeController)

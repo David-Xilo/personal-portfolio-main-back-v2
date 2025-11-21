@@ -29,10 +29,6 @@ func (m *MockDatabaseForInterface) GetProjects(projectType models.ProjectType) (
 	return nil, nil
 }
 
-func (m *MockDatabaseForInterface) GetGamesPlayed() ([]*models.GamesPlayed, error) {
-	return nil, nil
-}
-
 func TestDatabaseInterfaceImplementation(t *testing.T) {
 	// Test that our mock properly implements the Database interface
 	var db Database = &MockDatabaseForInterface{}
@@ -47,10 +43,6 @@ func TestDatabaseInterfaceImplementation(t *testing.T) {
 
 	projects, err := db.GetProjects(models.ProjectTypeTech)
 	assert.Nil(t, projects)
-	assert.Nil(t, err)
-
-	games, err := db.GetGamesPlayed()
-	assert.Nil(t, games)
 	assert.Nil(t, err)
 }
 
@@ -68,11 +60,6 @@ func TestDatabaseInterfaceMethodSignatures(t *testing.T) {
 	// Test GetProjects method signature
 	projects, err := mock.GetProjects(models.ProjectTypeTech)
 	assert.IsType(t, ([]*models.ProjectGroups)(nil), projects)
-	assert.IsType(t, error(nil), err)
-
-	// Test GetGamesPlayed method signature
-	games, err := mock.GetGamesPlayed()
-	assert.IsType(t, ([]*models.GamesPlayed)(nil), games)
 	assert.IsType(t, error(nil), err)
 }
 

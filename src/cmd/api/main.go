@@ -10,7 +10,6 @@ import (
 	configuration "personal-portfolio-main-back/src/internal/config"
 	"personal-portfolio-main-back/src/internal/controllers"
 	"personal-portfolio-main-back/src/internal/database"
-	"personal-portfolio-main-back/src/internal/security"
 	"syscall"
 	"time"
 )
@@ -25,9 +24,7 @@ func main() {
 
 	database.ValidateDBSchema(gormDB)
 
-	jwtManager := security.NewJWTManager(config)
-
-	routerSetup := controllers.SetupRoutes(db, config, jwtManager)
+	routerSetup := controllers.SetupRoutes(db, config)
 
 	server := &http.Server{
 		Addr:         ":" + config.Port,

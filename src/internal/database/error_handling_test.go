@@ -28,13 +28,6 @@ func TestNoPanicOnDatabaseErrors(t *testing.T) {
 				return err
 			},
 		},
-		{
-			name: "GetGamesPlayed should not panic on database error",
-			testFunc: func(db Database) error {
-				_, err := db.GetGamesPlayed()
-				return err
-			},
-		},
 	}
 
 	for _, tt := range tests {
@@ -74,12 +67,5 @@ func TestDatabaseErrorTypes(t *testing.T) {
 			assert.NoError(t, err)
 			assert.NotNil(t, contact)
 		}
-	})
-
-	// Test that Find operations handle empty results properly
-	t.Run("GetGamesPlayed handles empty results", func(t *testing.T) {
-		games, err := postgresDB.GetGamesPlayed()
-		assert.NoError(t, err)  // Empty results should not error
-		assert.NotNil(t, games) // Should return empty slice, not nil
 	})
 }

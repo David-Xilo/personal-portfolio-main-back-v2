@@ -5,7 +5,6 @@ import (
 	"time"
 
 	configuration "personal-portfolio-main-back/src/internal/config"
-	security2 "personal-portfolio-main-back/src/internal/security"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -29,10 +28,9 @@ func TestRouterSetup_GracefulShutdown(t *testing.T) {
 		FrontendAuthKey:      configuration.FrontendTokenAuth,
 		JWTExpirationMinutes: 30,
 	}
-	jwtManager := security2.NewJWTManager(config)
 
 	// Create router setup
-	routerSetup := SetupRoutes(mockDB, config, jwtManager)
+	routerSetup := SetupRoutes(mockDB, config)
 
 	// Verify rate limiter is running
 	assert.NotNil(t, routerSetup.RateLimiter)
