@@ -1,0 +1,208 @@
+basePath: /
+definitions:
+  models.ContactsDTO:
+    properties:
+      credly:
+        type: string
+      email:
+        type: string
+      github:
+        type: string
+      linkedin:
+        type: string
+      name:
+        type: string
+    type: object
+  models.GameGenres:
+    enum:
+    - undefined
+    - strategy
+    - table top
+    - RPG
+    type: string
+    x-enum-varnames:
+    - GameGenreUndefined
+    - GameGenreStrategy
+    - GameGenreTableTop
+    - GameGenreRpg
+  models.GamesPlayedDTO:
+    properties:
+      description:
+        type: string
+      genre:
+        $ref: '#/definitions/models.GameGenres'
+      rating:
+        type: integer
+      title:
+        type: string
+    type: object
+  models.PersonalReviewsCarouselDTO:
+    properties:
+      author:
+        type: string
+      description:
+        type: string
+      rating:
+        type: integer
+    type: object
+  models.ProjectGroupsDTO:
+    properties:
+      description:
+        type: string
+      project_type:
+        type: string
+      repositories:
+        items:
+          $ref: '#/definitions/models.RepositoriesDTO'
+        type: array
+      title:
+        type: string
+    type: object
+  models.RepositoriesDTO:
+    properties:
+      description:
+        type: string
+      genre:
+        $ref: '#/definitions/models.GameGenres'
+      link_to_git:
+        type: string
+      link_to_store:
+        type: string
+      rating:
+        type: integer
+      title:
+        type: string
+    type: object
+host: localhost:4000
+info:
+  contact:
+    email: support@support.com
+    name: API Support
+    url: http://www.support.com
+  description: personal-portfolio documentation for backend
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://yourterms.com
+  title: personal-portfolio
+  version: "1.0"
+paths:
+  /about/contact:
+    get:
+      consumes:
+      - application/json
+      description: Get contact information from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ContactsDTO'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get contact information
+      tags:
+      - about
+  /about/reviews/carousel:
+    get:
+      consumes:
+      - application/json
+      description: Get random reviews from random people, for the carousel component
+        in the about section
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PersonalReviewsCarouselDTO'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get random reviews from random people
+      tags:
+      - about
+  /finance/projects:
+    get:
+      consumes:
+      - application/json
+      description: Returns a list of finance-related projects
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/models.ProjectGroupsDTO'
+              type: array
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get projects related to finance
+      tags:
+      - finance
+  /games/projects:
+    get:
+      consumes:
+      - application/json
+      description: Returns a list of projects related to games
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.GamesPlayedDTO'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get projects related to games
+      tags:
+      - games
+  /tech/projects:
+    get:
+      consumes:
+      - application/json
+      description: Returns a list of tech-related projects
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/models.ProjectGroupsDTO'
+              type: array
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get projects related to tech
+      tags:
+      - tech
+swagger: "2.0"
