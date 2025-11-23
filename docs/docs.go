@@ -9,22 +9,13 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "http://yourterms.com",
-        "contact": {
-            "name": "API Support",
-            "url": "http://www.support.com",
-            "email": "support@support.com"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
+        "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/about/contact": {
+        "/contact": {
             "get": {
                 "description": "Get contact information from the database",
                 "consumes": [
@@ -56,115 +47,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/about/reviews/carousel": {
-            "get": {
-                "description": "Get random reviews from random people, for the carousel component in the about section",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "about"
-                ],
-                "summary": "Get random reviews from random people",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.PersonalReviewsCarouselDTO"
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/finance/projects": {
-            "get": {
-                "description": "Returns a list of finance-related projects",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "finance"
-                ],
-                "summary": "Get projects related to finance",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/models.ProjectGroupsDTO"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/games/projects": {
-            "get": {
-                "description": "Returns a list of projects related to games",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "games"
-                ],
-                "summary": "Get projects related to games",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.GamesPlayedDTO"
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/tech/projects": {
+        "/projects": {
             "get": {
                 "description": "Returns a list of tech-related projects",
                 "consumes": [
@@ -224,56 +107,13 @@ const docTemplate = `{
                 }
             }
         },
-        "models.GameGenres": {
-            "type": "string",
-            "enum": [
-                "undefined",
-                "strategy",
-                "table top",
-                "RPG"
-            ],
-            "x-enum-varnames": [
-                "GameGenreUndefined",
-                "GameGenreStrategy",
-                "GameGenreTableTop",
-                "GameGenreRpg"
-            ]
-        },
-        "models.GamesPlayedDTO": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "genre": {
-                    "$ref": "#/definitions/models.GameGenres"
-                },
-                "rating": {
-                    "type": "integer"
-                },
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.PersonalReviewsCarouselDTO": {
-            "type": "object",
-            "properties": {
-                "author": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "rating": {
-                    "type": "integer"
-                }
-            }
-        },
         "models.ProjectGroupsDTO": {
             "type": "object",
             "properties": {
                 "description": {
+                    "type": "string"
+                },
+                "link_to_project": {
                     "type": "string"
                 },
                 "project_type": {
@@ -296,17 +136,8 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
-                "genre": {
-                    "$ref": "#/definitions/models.GameGenres"
-                },
                 "link_to_git": {
                     "type": "string"
-                },
-                "link_to_store": {
-                    "type": "string"
-                },
-                "rating": {
-                    "type": "integer"
                 },
                 "title": {
                     "type": "string"
@@ -318,8 +149,8 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
-	Host:             "localhost:4000",
+	Version:          "2.0",
+	Host:             "",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "personal-portfolio",

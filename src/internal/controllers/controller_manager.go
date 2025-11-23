@@ -1,17 +1,3 @@
-// @title personal-portfolio
-// @version 1.0
-// @description personal-portfolio documentation for backend
-// @termsOfService http://yourterms.com
-
-// @contact.name API Support
-// @contact.url http://www.support.com
-// @contact.email support@support.com
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host localhost:4000
-// @BasePath /
 package controllers
 
 import (

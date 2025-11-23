@@ -1,3 +1,7 @@
+// @title personal-portfolio
+// @version 2.0
+// @description personal-portfolio documentation for backend
+// @BasePath /
 package main
 
 import (

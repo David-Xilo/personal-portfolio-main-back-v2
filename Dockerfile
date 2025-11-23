@@ -11,7 +11,7 @@ COPY . .
 RUN go install github.com/swaggo/swag/cmd/swag@latest
 RUN swag init -g src/internal/controllers/controller_manager.go -o docs
 
-RUN go build -o main ./src/cmd/api
+RUN go build -o main ./src/cmd/
 
 FROM alpine:latest
 
