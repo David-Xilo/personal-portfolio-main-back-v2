@@ -50,6 +50,8 @@ func createRouter(config configuration.Config) *RouterSetup {
 
 	globalLimiter := middleware.NewGlobalRateLimiter()
 
+	router.Use(middleware.ConcurrencyLimiterMiddleware())
+
 	router.Use(middleware.BasicRequestValidationMiddleware())
 
 	// Global limiter protects the entire service regardless of source IP.
