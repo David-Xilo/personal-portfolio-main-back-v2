@@ -20,12 +20,6 @@ func SecurityHeadersMiddleware(config configuration.Config) gin.HandlerFunc {
 		if (isProd && !isAPIEndpoint) || (!isProd && !isAPIEndpoint && !isSwagger) {
 			errorMsg := fmt.Sprintf("Path not allowed %s", c.Request.URL.Path)
 			slog.Error("SecurityHeadersMiddleware", "error", errorMsg)
-			err := fmt.Errorf("path not allowed")
-
-			slog.Error("SecurityHeadersMiddleware", "error", err)
-
-			//err = c.Error(err)
-
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": errorMsg})
 
 			return

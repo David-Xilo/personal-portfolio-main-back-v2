@@ -106,17 +106,6 @@ func (ipRateLimiter *IPRateLimiter) Stop() {
 	}
 }
 
-func (ipRateLimiter *IPRateLimiter) GetStats() map[string]interface{} {
-	ipRateLimiter.mu.RLock()
-	defer ipRateLimiter.mu.RUnlock()
-
-	return map[string]interface{}{
-		"total_ips": len(ipRateLimiter.ips),
-		"limit":     float64(ipRateLimiter.limit),
-		"burst":     ipRateLimiter.burst,
-	}
-}
-
 func RateLimitMiddleware(limiter *IPRateLimiter) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ip := getRemoteIP(c.Request)

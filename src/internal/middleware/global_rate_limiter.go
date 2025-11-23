@@ -12,8 +12,8 @@ import (
 
 // Global rate limiting (process-wide) to cap total incoming requests regardless of source IP.
 const (
-	globalRateLimitPerMinute = 100 // hardcoded for now; make configurable if needed
-	globalRateLimiterBurst   = 20  // allow short bursts before smoothing to the minute rate
+	globalRateLimitPerMinute = 1000 // hardcoded for now; make configurable if needed
+	globalRateLimiterBurst   = 200  // allow short bursts before smoothing to the minute rate
 )
 
 type GlobalRateLimiter struct {
