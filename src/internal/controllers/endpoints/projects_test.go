@@ -13,33 +13,32 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 )
 
-// MockDatabase implements the Database interface for testing
-type MockDatabase struct {
-	mock.Mock
-}
+//// MockDatabase implements the Database interface for testing
+//type MockDatabase struct {
+//	mock.Mock
+//}
+//
+//func (m *MockDatabase) GetContact() (*models.Contacts, error) {
+//	args := m.Called()
+//	if args.Get(0) == nil {
+//		return nil, args.Error(1)
+//	}
+//	return args.Get(0).(*models.Contacts), args.Error(1)
+//}
+//
+//func (m *MockDatabase) GetProjects(projectType models.ProjectType) ([]*models.ProjectGroups, error) {
+//	args := m.Called(projectType)
+//	if args.Get(0) == nil {
+//		return nil, args.Error(1)
+//	}
+//	return args.Get(0).([]*models.ProjectGroups), args.Error(1)
+//}
 
-func (m *MockDatabase) GetContact() (*models.Contacts, error) {
-	args := m.Called()
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).(*models.Contacts), args.Error(1)
-}
-
-func (m *MockDatabase) GetProjects(projectType models.ProjectType) ([]*models.ProjectGroups, error) {
-	args := m.Called(projectType)
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).([]*models.ProjectGroups), args.Error(1)
-}
-
-func setupTestTechController() (*TechController, *MockDatabase) {
+func setupTestTechController() (*ProjectsController, *MockDatabase) {
 	mockDB := new(MockDatabase)
 	config := configuration.Config{
 		Environment:         "test",
@@ -53,7 +52,7 @@ func setupTestTechController() (*TechController, *MockDatabase) {
 		WriteTimeout: 1 * time.Second,
 	}
 
-	controller := NewTechController(mockDB, config)
+	controller := NewProjectsController(mockDB, config)
 	return controller, mockDB
 }
 
@@ -231,7 +230,7 @@ func TestTechController_HandleProjects_Timeout(t *testing.T) {
 		WriteTimeout: 1 * time.Second,
 	}
 
-	controller := NewTechController(mockDB, config)
+	controller := NewProjectsController(mockDB, config)
 
 	// Set up mock expectation
 	mockDB.On("GetProjects", models.ProjectTypeTech).Return([]*models.ProjectGroups{}, nil).Maybe()

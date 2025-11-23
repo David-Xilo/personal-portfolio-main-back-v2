@@ -83,11 +83,11 @@ func createRouter(config configuration.Config) *RouterSetup {
 func getControllers(db database.Database, config configuration.Config) []Controller {
 	var controllers []Controller
 
-	techController := endpoints.NewTechController(db, config)
-	controllers = append(controllers, techController)
+	contactController := endpoints.NewContactController(db, config)
+	controllers = append(controllers, contactController)
 
-	financeController := endpoints.NewFinanceController(db, config)
-	controllers = append(controllers, financeController)
+	projectsController := endpoints.NewProjectsController(db, config)
+	controllers = append(controllers, projectsController)
 
 	return controllers
 }
