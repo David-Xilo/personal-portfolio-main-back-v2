@@ -20,19 +20,19 @@ const (
 
 func BasicRequestValidationMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if len(c.Request.URL.String()) > MaxURLLength {
-			logSecurityEvent(c, "URL_TOO_LONG", fmt.Sprintf("URL length: %d", len(c.Request.URL.String())))
-			c.JSON(http.StatusRequestEntityTooLarge, gin.H{
-				"error": "Request URL too large",
+		if c.Request.Method != http.MethodGet {
+			logSecurityEvent(c, "INVALID_HTTP_METHOD", c.Request.Method)
+			c.JSON(http.StatusMethodNotAllowed, gin.H{
+				"error": "Method not allowed",
 			})
 			c.Abort()
 			return
 		}
 
-		if c.Request.Method != http.MethodGet && c.Request.Method != http.MethodPost && c.Request.Method != http.MethodOptions {
-			logSecurityEvent(c, "INVALID_HTTP_METHOD", c.Request.Method)
-			c.JSON(http.StatusMethodNotAllowed, gin.H{
-				"error": "Method not allowed",
+		if len(c.Request.URL.String()) > MaxURLLength {
+			logSecurityEvent(c, "URL_TOO_LONG", fmt.Sprintf("URL length: %d", len(c.Request.URL.String())))
+			c.JSON(http.StatusRequestEntityTooLarge, gin.H{
+				"error": "Request URL too large",
 			})
 			c.Abort()
 			return
@@ -53,10 +53,6 @@ func BasicRequestValidationMiddleware() gin.HandlerFunc {
 
 		if !validateURLPath(c) {
 			return // validateURLPath handles the response
-		}
-
-		if c.Request.Method == http.MethodPost && !validateContentType(c) {
-			return
 		}
 
 		c.Next()
