@@ -124,7 +124,7 @@ func (ipRateLimiter *IPRateLimiter) GetCleanupContext() context.Context {
 
 func RateLimitMiddleware(limiter *IPRateLimiter) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ip := c.ClientIP()
+		ip := getRemoteIP(c.Request)
 		lim := limiter.GetLimiter(ip)
 
 		if !lim.Allow() {

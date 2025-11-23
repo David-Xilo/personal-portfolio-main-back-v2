@@ -19,8 +19,9 @@ type Controller interface {
 }
 
 type RouterSetup struct {
-	Router      *gin.Engine
-	RateLimiter *middleware.IPRateLimiter
+	Router          *gin.Engine
+	RateLimiter     *middleware.IPRateLimiter
+	GlobalRateLimit *middleware.GlobalRateLimiter
 }
 
 func SetupRoutes(db database.Database, config configuration.Config) *RouterSetup {
@@ -47,7 +48,12 @@ func createRouter(config configuration.Config) *RouterSetup {
 
 	router := gin.Default()
 
+	globalLimiter := middleware.NewGlobalRateLimiter()
+
 	router.Use(middleware.BasicRequestValidationMiddleware())
+
+	// Global limiter protects the entire service regardless of source IP.
+	router.Use(globalLimiter.Middleware())
 
 	router.Use(middleware.SecurityHeadersMiddleware(config))
 
@@ -61,8 +67,9 @@ func createRouter(config configuration.Config) *RouterSetup {
 	router.Use(middleware.GetCors(config))
 
 	return &RouterSetup{
-		Router:      router,
-		RateLimiter: limiter,
+		Router:          router,
+		RateLimiter:     limiter,
+		GlobalRateLimit: globalLimiter,
 	}
 }
 

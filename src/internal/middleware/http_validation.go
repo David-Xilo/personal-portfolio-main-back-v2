@@ -242,7 +242,7 @@ func logSecurityEvent(c *gin.Context, eventType, details string) {
 	slog.Warn("Security validation failed",
 		"event_type", eventType,
 		"details", logDetails,
-		"ip", c.ClientIP(),
+		"ip", getRemoteIP(c.Request),
 		"path", path,
 		"method", c.Request.Method,
 	)
