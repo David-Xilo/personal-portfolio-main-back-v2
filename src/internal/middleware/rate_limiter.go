@@ -117,17 +117,16 @@ func (ipRateLimiter *IPRateLimiter) GetStats() map[string]interface{} {
 	}
 }
 
-// GetCleanupContext returns the cleanup context for testing purposes
-func (ipRateLimiter *IPRateLimiter) GetCleanupContext() context.Context {
-	return ipRateLimiter.cleanupCtx
-}
-
 func RateLimitMiddleware(limiter *IPRateLimiter) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ip := getRemoteIP(c.Request)
 		lim := limiter.GetLimiter(ip)
 
 		if !lim.Allow() {
+			slog.Warn("Request rejected by IP rate limiter",
+				"path", c.Request.URL.Path,
+				"method", c.Request.Method,
+				"ip", ip)
 			c.JSON(http.StatusTooManyRequests, gin.H{
 				"error": "Rate limit exceeded",
 			})

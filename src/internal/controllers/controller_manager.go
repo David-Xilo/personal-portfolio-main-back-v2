@@ -1,14 +1,12 @@
 package controllers
 
 import (
-	"net/http"
 	_ "personal-portfolio-main-back/docs"
 	configuration "personal-portfolio-main-back/src/internal/config"
 	"personal-portfolio-main-back/src/internal/controllers/endpoints"
 	swaggerconfig "personal-portfolio-main-back/src/internal/controllers/swagger"
 	"personal-portfolio-main-back/src/internal/database"
 	"personal-portfolio-main-back/src/internal/middleware"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/time/rate"
@@ -29,8 +27,6 @@ func SetupRoutes(db database.Database, config configuration.Config) *RouterSetup
 	routerSetup := createRouter(config)
 
 	router := routerSetup.Router
-
-	addHealthEndpoint(router)
 
 	protected := router.Group("/")
 
@@ -85,15 +81,6 @@ func getControllers(db database.Database, config configuration.Config) []Control
 	controllers = append(controllers, projectsController)
 
 	return controllers
-}
-
-func addHealthEndpoint(router *gin.Engine) {
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"status":    "healthy",
-			"timestamp": time.Now().Unix(),
-		})
-	})
 }
 
 func registerProtectedRoutes(router *gin.RouterGroup, controllers []Controller) {
