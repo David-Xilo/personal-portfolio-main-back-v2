@@ -28,9 +28,9 @@ func (tc *ProjectsController) RegisterRoutes(router gin.IRouter) {
 	router.GET("/projects", tc.handleProjects)
 }
 
-// @Summary Get projects related to tech
-// @Description Returns a list of tech-related projects
-// @Tags tech
+// @Summary Get projects
+// @Description Returns a list of projects
+// @Tags projects
 // @Accept json
 // @Produce json
 // @Success 200 {array} []models.ProjectGroupsDTO

@@ -25,7 +25,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "about"
+                    "contact"
                 ],
                 "summary": "Get contact information",
                 "responses": {
@@ -49,7 +49,7 @@ const docTemplate = `{
         },
         "/projects": {
             "get": {
-                "description": "Returns a list of tech-related projects",
+                "description": "Returns a list of projects",
                 "consumes": [
                     "application/json"
                 ],
@@ -57,9 +57,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "tech"
+                    "projects"
                 ],
-                "summary": "Get projects related to tech",
+                "summary": "Get projects",
                 "responses": {
                     "200": {
                         "description": "OK",

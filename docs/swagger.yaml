@@ -63,12 +63,12 @@ paths:
             type: object
       summary: Get contact information
       tags:
-      - about
+      - contact
   /projects:
     get:
       consumes:
       - application/json
-      description: Returns a list of tech-related projects
+      description: Returns a list of projects
       produces:
       - application/json
       responses:
@@ -86,7 +86,7 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Get projects related to tech
+      summary: Get projects
       tags:
-      - tech
+      - projects
 swagger: "2.0"

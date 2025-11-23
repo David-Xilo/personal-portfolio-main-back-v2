@@ -30,7 +30,7 @@ func (ac *ContactController) RegisterRoutes(router gin.IRouter) {
 
 // @Summary Get contact information
 // @Description Get contact information from the database
-// @Tags about
+// @Tags contact
 // @Accept json
 // @Produce json
 // @Success 200 {object} models.ContactsDTO
