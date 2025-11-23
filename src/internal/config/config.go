@@ -3,7 +3,6 @@ package configuration
 import (
 	"log/slog"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -42,7 +41,7 @@ func LoadConfig() Config {
 		slog.Warn("Unset FRONTEND_URL value, exiting application")
 		os.Exit(1)
 	}
-	origins := []string{}
+	var origins []string
 	for _, origin := range strings.Split(originList, ",") {
 		if trimmed := strings.TrimSpace(origin); trimmed != "" {
 			origins = append(origins, trimmed)
@@ -79,32 +78,20 @@ func LoadConfig() Config {
 		writeTimeout = 1 * time.Second
 	}
 
-	// TODO - Everything related with JWT is pretty useless right now - I'll come back to it later
-	jwtExpirationStr := GetEnvOrDefault("JWT_EXPIRATION_MINUTES", "30")
-	jwtExpiration, err := strconv.Atoi(jwtExpirationStr)
-	if err != nil {
-		slog.Warn("Invalid JWT_EXPIRATION_MINUTES value, falling back to default", "default", "30")
-		jwtExpiration = 30
-	}
-
-	jwtSigning := GetEnvOrDefault("JWT_SIGNING_KEY", "dev_jwt_signing_key")
-
 	dbConfig := DbConfig{
 		DbUrl:     dbUrl,
 		DbTimeout: dbTimeout,
 	}
 
 	return Config{
-		Environment:          env,
-		EnableHTTPSRedirect:  isProd,
-		AllowedOrigins:       origins,
-		Port:                 port,
-		DatabaseConfig:       dbConfig,
-		ReadTimeout:          readTimeout,
-		WriteTimeout:         writeTimeout,
-		JWTSigningKey:        jwtSigning,
-		FrontendAuthKey:      FrontendTokenAuth,
-		JWTExpirationMinutes: jwtExpiration,
+		Environment:         env,
+		EnableHTTPSRedirect: isProd,
+		AllowedOrigins:      origins,
+		Port:                port,
+		DatabaseConfig:      dbConfig,
+		ReadTimeout:         readTimeout,
+		WriteTimeout:        writeTimeout,
+		FrontendAuthKey:     FrontendTokenAuth,
 	}
 }
 

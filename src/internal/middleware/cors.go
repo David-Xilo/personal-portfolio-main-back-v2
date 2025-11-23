@@ -12,6 +12,10 @@ func GetCors(config configuration.Config) gin.HandlerFunc {
 }
 
 func getCORSConfig(config configuration.Config) cors.Config {
+	allowedOriginSet := make(map[string]struct{}, len(config.AllowedOrigins))
+	for _, o := range config.AllowedOrigins {
+		allowedOriginSet[o] = struct{}{}
+	}
 
 	allowedHeaders := []string{
 		"content-type",
@@ -27,8 +31,16 @@ func getCORSConfig(config configuration.Config) cors.Config {
 	}
 
 	return cors.Config{
-		AllowOrigins:     config.AllowedOrigins,
-		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
+		// Only allow explicitly configured origins; reject unknown origins.
+		AllowOriginFunc: func(origin string) bool {
+			if origin == "" {
+				// Require Origin header to be present for CORS processing.
+				return false
+			}
+			_, ok := allowedOriginSet[origin]
+			return ok
+		},
+		AllowMethods:     []string{"GET"},
 		AllowHeaders:     allowedHeaders,
 		AllowCredentials: true,
 	}
