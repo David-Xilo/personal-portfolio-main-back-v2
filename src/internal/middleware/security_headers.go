@@ -50,6 +50,11 @@ func SecurityHeadersMiddleware(config configuration.Config) gin.HandlerFunc {
 		c.Header("Cross-Origin-Opener-Policy", "same-origin")
 		c.Header("Cross-Origin-Resource-Policy", "same-origin")
 
+		// HSTS for HTTPS responses in production to enforce secure transport
+		if isProd && (c.Request.TLS != nil || strings.EqualFold(c.GetHeader("X-Forwarded-Proto"), "https")) {
+			c.Header("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+		}
+
 		// Prevent caching of sensitive responses
 		if !isSwagger {
 			c.Header("Cache-Control", "no-store, no-cache, must-revalidate, private, max-age=0")
