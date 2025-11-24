@@ -20,15 +20,6 @@ const (
 
 func BasicRequestValidationMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if c.Request.Method != http.MethodGet {
-			logSecurityEvent(c, "INVALID_HTTP_METHOD", c.Request.Method)
-			c.JSON(http.StatusMethodNotAllowed, gin.H{
-				"error": "Method not allowed",
-			})
-			c.Abort()
-			return
-		}
-
 		if len(c.Request.URL.String()) > MaxURLLength {
 			logSecurityEvent(c, "URL_TOO_LONG", fmt.Sprintf("URL length: %d", len(c.Request.URL.String())))
 			c.JSON(http.StatusRequestEntityTooLarge, gin.H{
@@ -155,36 +146,6 @@ func validateURLPath(c *gin.Context) bool {
 	}
 
 	return true
-}
-
-func validateContentType(c *gin.Context) bool {
-	contentType := c.GetHeader("Content-Type")
-
-	allowedContentTypes := []string{
-		"application/json",
-	}
-
-	if contentType == "" {
-		logSecurityEvent(c, "MISSING_CONTENT_TYPE", "")
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Content-Type header required for POST requests",
-		})
-		c.Abort()
-		return false
-	}
-
-	for _, allowed := range allowedContentTypes {
-		if strings.HasPrefix(strings.ToLower(contentType), allowed) {
-			return true
-		}
-	}
-
-	logSecurityEvent(c, "INVALID_CONTENT_TYPE", contentType)
-	c.JSON(http.StatusUnsupportedMediaType, gin.H{
-		"error": "Unsupported content type",
-	})
-	c.Abort()
-	return false
 }
 
 func isValidHeaderName(name string) bool {

@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"log/slog"
 	configuration "personal-portfolio-main-back/src/internal/config"
 
 	"github.com/gin-contrib/cors"
@@ -17,6 +18,8 @@ func getCORSConfig(config configuration.Config) cors.Config {
 		allowedOriginSet[o] = struct{}{}
 	}
 
+	slog.Info("CORS configured", "allowed_origins", config.AllowedOrigins)
+
 	allowedHeaders := []string{
 		"content-type",
 		"referer",
@@ -31,16 +34,16 @@ func getCORSConfig(config configuration.Config) cors.Config {
 	}
 
 	return cors.Config{
-		// Only allow explicitly configured origins; reject unknown origins.
 		AllowOriginFunc: func(origin string) bool {
 			if origin == "" {
 				// Require Origin header to be present for CORS processing.
 				return false
 			}
 			_, ok := allowedOriginSet[origin]
+			slog.Info("CORS check", "origin", origin, "allowed", ok)
 			return ok
 		},
-		AllowMethods:     []string{"GET"},
+		AllowMethods:     []string{"GET", "OPTIONS"},
 		AllowHeaders:     allowedHeaders,
 		AllowCredentials: true,
 	}
