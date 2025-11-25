@@ -31,8 +31,10 @@ func (p *PostgresDB) GetProjects(projectType models.ProjectType) ([]*models.Proj
 
 	if err := p.db.
 		Where("project_type = ?", projectType).
-		Preload("ProjectRepositories").
-		Order("created_at desc").
+		Preload("ProjectRepositories", func(db *gorm.DB) *gorm.DB {
+			return db.Order("show_priority desc, created_at desc")
+		}).
+		Order("show_priority desc, created_at desc").
 		Find(&projectGroups).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err

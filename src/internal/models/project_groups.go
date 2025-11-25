@@ -13,6 +13,8 @@ type ProjectGroups struct {
 	Description   string     `json:"description"`
 	ProjectType   string     `json:"project_type"`
 	LinkToProject string     `json:"link_to_project"`
+	ShowPriority  int        `json:"show_priority"`
+	ImageUrl      string     `json:"image_url"`
 
 	ProjectRepositories []ProjectRepositories `json:"project_repositories,omitempty" gorm:"foreignKey:ProjectGroupID"`
 }
@@ -22,6 +24,7 @@ type ProjectGroupsDTO struct {
 	Description   string `json:"description"`
 	ProjectType   string `json:"project_type"`
 	LinkToProject string `json:"link_to_project"`
+	ImageUrl      string `json:"image_url"`
 
 	Repositories []*RepositoriesDTO `json:"repositories,omitempty"`
 }
@@ -38,6 +41,7 @@ func ToProjectGroupsDTO(projectGroup *ProjectGroups) *ProjectGroupsDTO {
 		Description:   projectGroup.Description,
 		ProjectType:   projectGroup.ProjectType,
 		LinkToProject: projectGroup.LinkToProject,
+		ImageUrl:      projectGroup.ImageUrl,
 		Repositories:  repositoriesDTOList,
 	}
 }
