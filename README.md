@@ -8,7 +8,6 @@ REST API backend for a personal portfolio application built with Go.
 - [API Endpoints](#api-endpoints)
 - [Development](#development)
 - [Testing](#testing)
-- [Deployment](#deployment)
 - [Related Projects](#related-projects)
 
 ## Technologies Used
@@ -23,65 +22,19 @@ REST API backend for a personal portfolio application built with Go.
 
 ## API Endpoints
 
-### **Authentication**
+### **Contact**
 ```
-POST /auth/token
-```
-- **Description**: Generate JWT token for frontend authentication (not very useful without proper credentials, but easier to change in the future)
-- **Body**: `{"auth_key": "your-auth-key"}`
-- **Response**: `{"token": "jwt-token", "expires_in": 1800}`
-
-### **About & Contact**
-```
-GET /about/contact
+GET /contact
 ```
 - **Description**: Get contact information
-- **Authentication**: Required (JWT)
 - **Response**: Contact details from database
-
-```
-GET /about/personal-reviews
-```
-- **Description**: Get personal reviews carousel data
-- **Authentication**: Required (JWT)
-- **Response**: Array of personal reviews
 
 ### **Portfolio Projects**
 ```
-GET /tech/projects
+GET /projects
 ```
-- **Description**: Get technology projects
-- **Authentication**: Required (JWT)
-- **Response**: Array of tech project groups
-
-```
-GET /finance/projects
-```
-- **Description**: Get finance projects
-- **Authentication**: Required (JWT)
-- **Response**: Array of finance project groups
-
-```
-GET /games/projects
-```
-- **Description**: Get game projects
-- **Authentication**: Required (JWT)
-- **Response**: Array of game project groups
-
-```
-GET /games/played
-```
-- **Description**: Get recently played games
-- **Authentication**: Required (JWT)
-- **Response**: Array of recently played games
-
-### **System**
-```
-GET /health
-```
-- **Description**: Health check endpoint
-- **Authentication**: Not required
-- **Response**: `{"status": "healthy"}`
+- **Description**: Get projects and repositories
+- **Response**: Array of tech project groups with repositories
 
 ### **Documentation**
 ```
@@ -95,7 +48,7 @@ GET /swagger/*
 
 ### **Development Environment Setup**
 
-For development environment please check https://github.com/David-Xilo/personal-portfolio-orchestration
+Check https://github.com/David-Xilo/personal-portfolio-orchestration
 
 ## Testing
 
@@ -131,7 +84,7 @@ go test -bench=. ./...
 go clean -testcache
 
 # Build the application
-go build -o main ./src/cmd/api
+go build -o main ./src/cmd
 
 # Format code
 go fmt ./...
@@ -150,29 +103,9 @@ go mod tidy
 go mod verify
 ```
 
-## Deployment
-
-### **Docker Deployment**
-
-```bash
-# Build locally
-docker build -t ${BACKEND_IMAGE} ${BACKEND_DOCKERFILE}
-
-# Run container
-docker run \
-        -e ENV=development \
-        -e DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable" \
-        -e FRONTEND_URL=${FRONTEND_URL} \
-        -e PORT=${BACKEND_PORT} \
-        --network ${NETWORK_NAME} \
-        --name ${BACKEND_CONTAINER} \
-        -p ${BACKEND_PORT}:${BACKEND_PORT} \
-        -d ${BACKEND_IMAGE}
-```
-
 ## Related Projects
 
-- **Frontend**: https://github.com/David-Xilo/personal-portfolio-main-front
+- **Frontend**: https://github.com/David-Xilo/personal-portfolio-main-front-v2
 - **Infrastructure**: https://github.com/David-Xilo/personal-portfolio-orchestration
 - **Database**: https://github.com/David-Xilo/personal-portfolio-db-schema
 
