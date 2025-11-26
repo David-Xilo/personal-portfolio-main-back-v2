@@ -69,11 +69,11 @@ jobs:
           CUSTOM_TAG="${{ github.event.inputs.tag_version }}"
           
           if [[ "$ENVIRONMENT" == "production" ]]; then
-            TAGS="${TAGS}xilo/personal-portfolio-backend-main:latest,"
+            TAGS="${TAGS}xilo/personal-portfolio-backend-main-v2:latest,"
           fi
           
           if [[ -n "$CUSTOM_TAG" ]]; then
-            TAGS="${TAGS}xilo/personal-portfolio-backend-main:${CUSTOM_TAG},"
+            TAGS="${TAGS}xilo/personal-portfolio-backend-main-v2:${CUSTOM_TAG},"
           fi
           
           # Remove trailing comma
