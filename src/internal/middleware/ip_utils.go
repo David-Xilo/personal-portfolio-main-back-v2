@@ -3,13 +3,20 @@ package middleware
 import (
 	"net"
 	"net/http"
+	"strings"
 )
 
-// getRemoteIP returns the client IP based solely on the TCP remote address.
-// This ignores any forwarded headers to avoid spoofing when running directly on the internet.
 func getRemoteIP(r *http.Request) string {
 	if r == nil {
 		return ""
+	}
+
+	if forwardedFor := r.Header.Get("X-Forwarded-For"); forwardedFor != "" {
+		for _, part := range strings.Split(forwardedFor, ",") {
+			if ip := strings.TrimSpace(part); ip != "" {
+				return ip
+			}
+		}
 	}
 
 	host, _, err := net.SplitHostPort(r.RemoteAddr)
