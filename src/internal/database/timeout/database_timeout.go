@@ -7,7 +7,6 @@ import (
 
 type DatabaseOperation[T any] func(ctx context.Context) (T, error)
 
-// WithTimeout executes a database operation with a timeout
 func WithTimeout[T any](ctx context.Context, timeout time.Duration, operation DatabaseOperation[T]) (T, error) {
 	var zero T
 

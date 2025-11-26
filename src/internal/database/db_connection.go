@@ -117,7 +117,7 @@ func CloseDB(db *gorm.DB) error {
 }
 
 func ValidateDBSchema(db *gorm.DB) {
-	if !db.Migrator().HasTable(&models.Contacts{}) || !db.Migrator().HasTable(&models.ProjectGroups{}) {
+	if !db.Migrator().HasTable(&models.Contacts{}) || !db.Migrator().HasTable(&models.ProjectGroups{}) || !db.Migrator().HasTable(&models.ProjectRepositories{}) {
 		slog.Error("Database schema is outdated. Please run the migrations first.")
 		os.Exit(1)
 	}
