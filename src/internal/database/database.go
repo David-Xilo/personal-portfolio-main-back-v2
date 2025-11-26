@@ -2,9 +2,11 @@ package database
 
 import (
 	"personal-portfolio-main-back/src/internal/models"
+
+	"golang.org/x/net/context"
 )
 
 type Database interface {
-	GetContact() (*models.Contacts, error)
-	GetProjects(projectType models.ProjectType) ([]*models.ProjectGroups, error)
+	GetContact(context.Context) (*models.Contacts, error)
+	GetProjects(ctx context.Context, projectType models.ProjectType) ([]*models.ProjectGroups, error)
 }

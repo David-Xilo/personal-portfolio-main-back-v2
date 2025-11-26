@@ -38,7 +38,7 @@ func (ac *ContactController) RegisterRoutes(router gin.IRouter) {
 // @Router /contact [get]
 func (ac *ContactController) handleContactRequest(ctx *gin.Context) {
 	contact, err := timeout.WithTimeout(ctx.Request.Context(), ac.config.DatabaseConfig.DbTimeout, func(dbCtx context.Context) (*models.Contacts, error) {
-		return ac.db.GetContact()
+		return ac.db.GetContact(dbCtx)
 	})
 	if err != nil {
 		dberrors.HandleDatabaseError(ctx, err)

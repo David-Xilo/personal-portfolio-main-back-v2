@@ -38,7 +38,7 @@ func LoadConfig() Config {
 
 	originList := os.Getenv("ALLOWED_ORIGINS")
 	if originList == "" {
-		slog.Warn("Unset FRONTEND_URL value, exiting application")
+		slog.Warn("Unset ALLOWED_ORIGINS value, exiting application")
 		os.Exit(1)
 	}
 	var origins []string

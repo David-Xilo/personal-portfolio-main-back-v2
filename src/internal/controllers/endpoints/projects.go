@@ -38,7 +38,7 @@ func (tc *ProjectsController) RegisterRoutes(router gin.IRouter) {
 // @Router /projects [get]
 func (tc *ProjectsController) handleProjects(ctx *gin.Context) {
 	projects, err := timeout.WithTimeout(ctx.Request.Context(), tc.config.DatabaseConfig.DbTimeout, func(dbCtx context.Context) ([]*models.ProjectGroups, error) {
-		return tc.db.GetProjects(models.ProjectTypeTech)
+		return tc.db.GetProjects(dbCtx, models.ProjectTypeTech)
 	})
 	if err != nil {
 		dberrors.HandleDatabaseError(ctx, err)
