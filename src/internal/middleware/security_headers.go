@@ -14,7 +14,7 @@ func SecurityHeadersMiddleware(config configuration.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		path := c.Request.URL.Path
 		isSwagger := strings.HasPrefix(path, "/swagger/") || path == "/"
-		isAPIEndpoint := strings.HasPrefix(path, "/contact") || strings.HasPrefix(path, "/projects")
+		isAPIEndpoint := strings.HasPrefix(path, "/contact") || strings.HasPrefix(path, "/projects") || strings.HasPrefix(path, "/contact/") || strings.HasPrefix(path, "/projects/")
 		isProd := config.Environment == "production"
 
 		if (isProd && !isAPIEndpoint) || (!isProd && !isAPIEndpoint && !isSwagger) {
