@@ -82,7 +82,10 @@ func attemptConnection(dsn string, attempt int) (*gorm.DB, error) {
 	slog.Info("Pinging database")
 	if err := sqlDB.PingContext(ctx); err != nil {
 		slog.Error("Database ping failed", "error", err, "attempt", attempt)
-		sqlDB.Close()
+		errClosing := sqlDB.Close()
+		if errClosing != nil {
+			return nil, fmt.Errorf("closing db connection failed: %w", errClosing)
+		}
 		return nil, fmt.Errorf("ping failed: %w", err)
 	}
 	slog.Info("Database ping successful", "attempt", attempt)
@@ -114,7 +117,7 @@ func CloseDB(db *gorm.DB) error {
 }
 
 func ValidateDBSchema(db *gorm.DB) {
-	if !db.Migrator().HasTable(&models.Contacts{}) {
+	if !db.Migrator().HasTable(&models.Contacts{}) || !db.Migrator().HasTable(&models.ProjectGroups{}) {
 		slog.Error("Database schema is outdated. Please run the migrations first.")
 		os.Exit(1)
 	}

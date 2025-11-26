@@ -1,10 +1,10 @@
 package database
 
 import (
+	"context"
 	"errors"
 	"personal-portfolio-main-back/src/internal/models"
 
-	"golang.org/x/net/context"
 	"gorm.io/gorm"
 )
 

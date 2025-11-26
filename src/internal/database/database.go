@@ -3,7 +3,7 @@ package database
 import (
 	"personal-portfolio-main-back/src/internal/models"
 
-	"golang.org/x/net/context"
+	"context"
 )
 
 type Database interface {

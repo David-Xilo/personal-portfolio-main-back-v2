@@ -6,8 +6,8 @@ import (
 	"log/slog"
 	"net/http"
 
+	"context"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/net/context"
 	"gorm.io/gorm"
 )
 

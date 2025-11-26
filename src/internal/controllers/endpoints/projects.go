@@ -8,8 +8,9 @@ import (
 	"personal-portfolio-main-back/src/internal/database/timeout"
 	"personal-portfolio-main-back/src/internal/models"
 
+	"context"
+
 	"github.com/gin-gonic/gin"
-	"golang.org/x/net/context"
 )
 
 type ProjectsController struct {
