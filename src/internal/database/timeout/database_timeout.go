@@ -2,6 +2,7 @@ package timeout
 
 import (
 	"context"
+	"fmt"
 	"time"
 )
 
@@ -22,16 +23,21 @@ func WithTimeout[T any](ctx context.Context, timeout time.Duration, operation Da
 
 	resultChan := make(chan result, 1)
 
-	// Execute operation in goroutine
 	go func() {
-		data, err := operation(timeoutCtx)
-		resultChan <- result{data: data, err: err}
+		defer func() {
+			if r := recover(); r != nil {
+				err := fmt.Errorf("database operation panic: %v", r)
+				select {
+				case resultChan <- result{err: err}:
+				case <-timeoutCtx.Done(): // caller already timed out; drop the result
+				}
+			}
+		}()
 	}()
-
-	// Wait for either completion or timeout
+	data, err := operation(timeoutCtx)
 	select {
-	case res := <-resultChan:
-		return res.data, res.err
+	case _ = <-resultChan:
+		return data, err
 	case <-timeoutCtx.Done():
 		return zero, context.DeadlineExceeded
 	}
