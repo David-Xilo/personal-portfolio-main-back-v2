@@ -29,15 +29,19 @@ func WithTimeout[T any](ctx context.Context, timeout time.Duration, operation Da
 				err := fmt.Errorf("database operation panic: %v", r)
 				select {
 				case resultChan <- result{err: err}:
-				case <-timeoutCtx.Done(): // caller already timed out; drop the result
+				case <-timeoutCtx.Done():
 				}
 			}
 		}()
+		data, err := operation(timeoutCtx)
+		select {
+		case resultChan <- result{data: data, err: err}:
+		case <-timeoutCtx.Done():
+		}
 	}()
-	data, err := operation(timeoutCtx)
 	select {
-	case _ = <-resultChan:
-		return data, err
+	case res := <-resultChan:
+		return res.data, res.err
 	case <-timeoutCtx.Done():
 		return zero, context.DeadlineExceeded
 	}
